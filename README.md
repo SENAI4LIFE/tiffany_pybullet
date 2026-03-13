@@ -32,7 +32,7 @@ export ONSHAPE_SECRET_KEY=<your-secret-key>
     "outputFormat": "urdf",
     "assemblyName": "robot",
     "ignore": {
-        "CORPO_CENTER": "collision"
+        "corpo_center": "collision"
     }
 }
 ```
