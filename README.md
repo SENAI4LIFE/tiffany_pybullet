@@ -2,6 +2,7 @@
 
 Simulation of **Tiffany**, a 3-DOF-per-leg hexapod robot.
 Hardware repo: https://github.com/Penguin-Lab/tiffany
+
 ---
 
 ## Modeling
@@ -49,6 +50,8 @@ export ONSHAPE_SECRET_KEY=<your-secret-key>
 
 ```bash
 cd ~/tiffany_pybullet/
+python3 -m venv venv
+source venv/bin/activate
 pip install --upgrade pip pybullet numpy
 ```
 
