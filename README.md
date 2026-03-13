@@ -49,7 +49,7 @@ export ONSHAPE_SECRET_KEY=<your-secret-key>
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/SENAI4LIFE/tiffany_sim.git
+git clone https://github.com/SENAI4LIFE/tiffany_pybullet.git
 ```
 
 **2. Navigate to the project directory**
