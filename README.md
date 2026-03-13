@@ -48,7 +48,7 @@ export ONSHAPE_SECRET_KEY=<your-secret-key>
 ## Install
 
 ```bash
-cd ~/tiffany_pybullet/pybullet
+cd ~/tiffany_pybullet/
 pip install --upgrade pip pybullet numpy
 ```
 
