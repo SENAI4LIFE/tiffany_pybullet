@@ -49,6 +49,7 @@ export ONSHAPE_SECRET_KEY=<your-secret-key>
 ## Install
 
 ```bash
+git clone https://github.com/SENAI4LIFE/tiffany_sim.git
 cd ~/tiffany_pybullet/
 python3 -m venv venv
 source venv/bin/activate
@@ -60,5 +61,6 @@ pip install --upgrade pip pybullet numpy
 ## Run
 
 ```bash
+source venv/bin/activate
 python3 main.py
 ```
