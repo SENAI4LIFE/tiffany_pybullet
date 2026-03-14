@@ -388,14 +388,13 @@ def main():
     patinha_k      = 0
 
     KEY_E = ord('e')
+    KEY_Q = ord('q')
     KEY_R = ord('r')
+    KEY_B = ord('b')
     KEY_F = ord('f')
     KEY_C = ord('c')
     KEY_X = ord('x')
-    KEY_B = ord('b')
     KEY_Z = ord('z')
-    KEY_N = ord('n')
-    KEY_G = ord('g')
     KEY_P = ord('p')
 
     UP    = p.B3G_UP_ARROW
@@ -425,7 +424,7 @@ def main():
 
         if cam_track:
             pos, _ = p.getBasePositionAndOrientation(robot)
-            p.resetDebugVisualizerCamera(1.0, 270, -25, [pos[0]-1.0, pos[1], pos[2]+1.0])
+            p.resetDebugVisualizerCamera(1.0, 270, -25, [pos[0], pos[1], pos[2]])
 
         if last_key and not (last_key in keys and keys[last_key] & p.KEY_IS_DOWN):
             last_key = None
@@ -440,7 +439,7 @@ def main():
             k     = 0
             state = "IDLE"
 
-        elif last_key == KEY_R and state in ("IDLE", "WALKING", "TURNING", "BALANCE", "REBOLAR", "POSE", "PATINHA"):
+        elif last_key == KEY_Q and state in ("IDLE", "WALKING", "TURNING", "BALANCE", "REBOLAR", "POSE", "PATINHA"):
             run_shutdown_sequence(robot, xyz_ini)
             state = "POWERED_OFF"
 
@@ -454,16 +453,10 @@ def main():
         z_held = KEY_Z in keys and keys[KEY_Z] & p.KEY_IS_DOWN
 
         if state in ("IDLE", "WALKING", "TURNING", "BALANCE", "REBOLAR", "POSE", "PATINHA"):
-            if last_key == KEY_B:
+            if last_key == KEY_R:
                 state = "REBOLAR"
-            elif last_key == KEY_N:
+            elif last_key == KEY_B:
                 state = "BALANCE"
-            elif last_key == KEY_G:
-                if state == "PATINHA":
-                    state = "IDLE"
-                else:
-                    patinha_k = 0
-                    state = "PATINHA"
             elif z_held:
                 state = "POSE"
                 if up_dn[0]:
