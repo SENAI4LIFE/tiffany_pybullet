@@ -57,25 +57,24 @@ git clone https://github.com/SENAI4LIFE/tiffany_pybullet.git
 python3 -m venv venv
 ```
 
-**3. Navigate to the project directory**
-```bash
-cd ~/tiffany_pybullet/
-```
-
-**4. Activate the virtual environment**
+**3. Activate the virtual environment**
 ```bash
 source venv/bin/activate
 ```
 
-**5. Install dependencies**
+**4. Install dependencies**
 ```bash
 pip install --upgrade pip pybullet numpy
+```
+
+**5. Navigate to the project directory**
+```bash
+cd ~/tiffany_pybullet/
 ```
 
 ---
 
 ## Run
 ```bash
-source venv/bin/activate
 python3 main.py
 ```
