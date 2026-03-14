@@ -8,7 +8,8 @@ Hardware repo: https://github.com/Penguin-Lab/tiffany
 The robot was designed in Autodesk Fusion, exported as `.step`, then assembled and mate-constrained in Onshape.<br>
 [onshape-to-robot](https://github.com/Rhoban/onshape-to-robot) was used to convert the Onshape assembly into URDF.
 
-To regenerate the URDF from your own model, set up `keys` and `config.json` as described in the [onshape-to-robot docs](https://onshape-to-robot.readthedocs.io/), then run:
+To regenerate the URDF from your own model, set up `keys` and `config.json` <br>
+as described in the [onshape-to-robot docs](https://onshape-to-robot.readthedocs.io/), then run:
 
 ```bash
 pip install onshape-to-robot
