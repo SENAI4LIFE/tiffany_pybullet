@@ -76,5 +76,23 @@ cd ~/tiffany_pybullet/
 
 ## Run
 ```bash
+source venv/bin/activate
 python3 main.py
 ```
+
+---
+
+## Controls
+
+| Key | Action |
+|-----|--------|
+| `E` | Power on — boots the robot and enters idle |
+| `R` | Power off — runs shutdown sequence |
+| `↑ ↓ ← →` | Walk in the corresponding direction |
+| `C` | Switch to **Turn** navigation mode |
+| `X` | Switch to **Omni** navigation mode (default) |
+| `Z` + `↑ ↓ ← →` | Pose mode — tilt body (pitch / roll) |
+| `B` | Rebolar — body sway animation |
+| `N` | Balance mode — auto-corrects body tilt |
+| `P` or `G` | Give a paw — triggers the *patinha* animation |
+| `F` | Toggle camera tracking (follows the robot) |
