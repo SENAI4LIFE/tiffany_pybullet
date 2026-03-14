@@ -52,14 +52,14 @@ export ONSHAPE_SECRET_KEY=<your-secret-key>
 git clone https://github.com/SENAI4LIFE/tiffany_pybullet.git
 ```
 
-**2. Navigate to the project directory**
-```bash
-cd ~/tiffany_pybullet/
-```
-
-**3. Create a virtual environment**
+**2. Create a virtual environment**
 ```bash
 python3 -m venv venv
+```
+
+**3. Navigate to the project directory**
+```bash
+cd ~/tiffany_pybullet/
 ```
 
 **4. Activate the virtual environment**
