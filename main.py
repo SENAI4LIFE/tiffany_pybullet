@@ -6,7 +6,7 @@ import numpy as np
 import bootcamp
 
 SIM_FREQ      = 120
-DT            = 1.0 / SIM_FREQ
+DT            = 1.0 / SIM_FREQ / 2
 GAIT_TICK_MS  = 20
 GAIT_TICK_STEPS = max(1, round(GAIT_TICK_MS / 1000.0 / DT))
 TOTAL_PONTOS  = 25
