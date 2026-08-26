@@ -45,12 +45,12 @@ OFFSETS = [0, METADE_PONTOS, 0, METADE_PONTOS, 0, METADE_PONTOS]
 STEP_LENGTH = -8.0
 
 ANGLES_STOW_BY_LEG = [
-    ( 0.0,  90.0, -135.0),
-    ( 0.0,  90.0, -135.0),
-    ( 0.0,  90.0, -135.0),
-    ( 0.0,  90.0, -135.0),
-    ( 0.0,  90.0, -135.0),
-    ( 0.0,  90.0, -135.0),
+    ( 0.0,  85.0, -135.0),
+    ( 0.0,  85.0, -135.0),
+    ( 0.0,  85.0, -135.0),
+    ( 0.0,  85.0, -135.0),
+    ( 0.0,  85.0, -135.0),
+    ( 0.0,  85.0, -135.0),
 ]
 
 
@@ -97,10 +97,14 @@ def build_bezier_points(xyz_ini):
     P2 = [P3[0] - half / 2.0,      P0[1] + 2.0 * abs(half)]
     return P0, P1, P2, P3
 
+def _ease_smoothstep(t):
+    return t * t * (3.0 - 2.0 * t)
+
 def trajetoria_linear(xyz_ini, k, offset, angle_rad, P0, P1, P2, P3):
     kn = (k + offset) % TOTAL_PONTOS
     if kn < METADE_PONTOS:
         t  = float(kn) / (METADE_PONTOS - 1)
+        t  = _ease_smoothstep(t)
         u  = 1.0 - t
         bx = u**3*P0[0] + 3*u**2*t*P1[0] + 3*u*t**2*P2[0] + t**3*P3[0]
         bz = u**3*P0[1] + 3*u**2*t*P1[1] + 3*u*t**2*P2[1] + t**3*P3[1]
@@ -110,6 +114,7 @@ def trajetoria_linear(xyz_ini, k, offset, angle_rad, P0, P1, P2, P3):
         z  = bz
     else:
         t  = float(kn - METADE_PONTOS) / (METADE_PONTOS - 1)
+        t  = _ease_smoothstep(t)
         bx = P3[0] + (P0[0] - P3[0]) * t
         dx = bx - xyz_ini[0]
         x  = xyz_ini[0] + math.cos(angle_rad) * dx
@@ -136,7 +141,7 @@ def bezier_pata(xyz_ini, k, dx, dy, dz, total):
     dz1, dz2 = dz / 4.0, dz / 2.0
     Px = [xyz_ini[0], xyz_ini[0]+dx1, xyz_ini[0]+dx2, xyz_ini[0]+dx]
     Py = [xyz_ini[1], xyz_ini[1]+dy1, xyz_ini[1]+dy2, xyz_ini[1]+dy]
-    Pz = [xyz_ini[2], xyz_ini[2]+dz1+6.0, xyz_ini[2]+dz2+10.0, xyz_ini[2]+dz]
+    Pz = [xyz_ini[2], xyz_ini[2]+dz1+0.6, xyz_ini[2]+dz2+1.0, xyz_ini[2]+dz]
     if kn < meta:
         t = float(kn) / (meta - 1)
         u = 1.0 - t
@@ -157,7 +162,7 @@ def circular_roll_pitch_yaw(k, angle_max_deg):
     return roll_deg, pitch_deg, 0.0
 
 def compute_rebolar(k, xyz_ini):
-    roll_deg, pitch_deg, yaw_deg = circular_roll_pitch_yaw(k, 10)
+    roll_deg, pitch_deg, yaw_deg = circular_roll_pitch_yaw(k, 15)
     return compute_ik_corpo(roll_deg, pitch_deg, yaw_deg, xyz_ini)
 
 PATINHA_TOTAL  = 50
@@ -258,7 +263,7 @@ def compute_andar(k, angle_rad, xyz_ini, bezier):
         results.append(ik(xyz))
     return results
 
-def compute_andar_circular(k, angle_deg, xyz_ini, bezier):
+def compute_turn_1(k, angle_deg, xyz_ini, bezier):
     angle_abs = abs(angle_deg)
     angle_max = _PI / 9.0
     if angle_deg < 0:
@@ -270,16 +275,33 @@ def compute_andar_circular(k, angle_deg, xyz_ini, bezier):
     elif angle_abs == 90:
         v_mult = 0.0
 
-    dir_signs = [1, 1, 1, -1, -1, -1]
-    results   = []
+    dir_signs   = [1, 1, 1, -1, -1, -1]
+    angled_legs = {0, 2, 3, 5}
+    results     = []
     for i, cfg in enumerate(LEG_CONFIGS):
         P0, P1, P2, P3 = bezier[i]
-        step_len = P3[0] - xyz_ini[i][0]
-        xyz_lin  = trajetoria_linear(xyz_ini[i], k, OFFSETS[i], 0, P0, P1, P2, P3)
         sign     = dir_signs[i]
         shoulder = SHOULDER_POSITIONS[i] * np.array([-1.0, sign, 1.0])
-        xyz_rot  = mapeia_circular(xyz_ini[i], xyz_lin, step_len, angle_max * sign, shoulder)
-        xyz_b    = (xyz_lin * v_mult + xyz_rot * w_mult) / (v_mult + w_mult)
+        if i in angled_legs:
+            leg_angle = math.atan2(-xyz_ini[i][0], xyz_ini[i][1])
+            step_len  = P3[0] - xyz_ini[i][0]
+            xyz_lin   = trajetoria_linear(xyz_ini[i], k, OFFSETS[i], leg_angle, P0, P1, P2, P3)
+
+            xyz_lin0    = trajetoria_linear(xyz_ini[i], k, OFFSETS[i], 0, P0, P1, P2, P3)
+            ombro_ini   = -math.atan2(xyz_ini[i][0], xyz_ini[i][1])
+            y_prime_ini = math.sqrt(xyz_ini[i][0]**2 + xyz_ini[i][1]**2) - L1
+            reach       = L1 + y_prime_ini
+            d_alpha     = (angle_max * sign / 2.0) * (xyz_lin0[0] - xyz_ini[i][0]) / step_len
+            ombro_rot   = ombro_ini + d_alpha
+            xyz_rot     = np.array([-math.sin(ombro_rot) * reach,
+                                     math.cos(ombro_rot) * reach,
+                                     xyz_lin[2]])
+            xyz_b = (xyz_lin * v_mult + xyz_rot * w_mult) / (v_mult + w_mult)
+        else:
+            xyz_lin  = trajetoria_linear(xyz_ini[i], k, OFFSETS[i], 0, P0, P1, P2, P3)
+            step_len = P3[0] - xyz_ini[i][0]
+            xyz_rot  = mapeia_circular(xyz_ini[i], xyz_lin, step_len, angle_max * sign, shoulder)
+            xyz_b    = (xyz_lin * v_mult + xyz_rot * w_mult) / (v_mult + w_mult)
         results.append(ik(xyz_b))
     return results
 
@@ -295,11 +317,11 @@ def compute_ik_corpo(roll_deg, pitch_deg, yaw_deg, xyz_ini):
         np.array([-1., 1., 1.]),
     ]
     for i in range(6):
-        sig   = sig_list[i]
-        ombro = SHOULDER_POSITIONS[i]
-        ponto = xyz_ini[i] * sig + ombro
-        rot   = R @ ponto
-        xyz   = (rot - ombro) * sig
+        sig        = sig_list[i]
+        ombro      = SHOULDER_POSITIONS[i]
+        world_foot = ombro + xyz_ini[i] * sig
+        new_ombro  = R @ ombro
+        xyz        = (world_foot - new_ombro) * sig
         results.append(ik(xyz))
     return results
 
@@ -384,7 +406,7 @@ def main():
     last_key       = None
     pose_roll      = 0.0
     pose_pitch     = 0.0
-    POSE_MAX       = 15.0
+    POSE_MAX       = 25.0
     POSE_STEP      = 1.5
     patinha_k      = 0
 
@@ -498,7 +520,7 @@ def main():
                 k = (k + 1) % TOTAL_PONTOS
 
         elif state == "TURNING":
-            results = compute_andar_circular(k, angle_joystick, xyz_ini, bezier)
+            results = compute_turn_1(k, angle_joystick, xyz_ini, bezier)
             for i, (o, f, t) in enumerate(results):
                 set_leg(robot, LEG_CONFIGS[i], o, f, t)
             if sim_tick % GAIT_TICK_STEPS == 0:
