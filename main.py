@@ -498,11 +498,12 @@ def main():
                     elif lr[1]:    angle_joystick = 90.0
                     state = "WALKING"
                 else:
-                    if   up_dn[0]: angle_joystick = 180.0
-                    elif up_dn[1]: angle_joystick = 0.0
-                    elif lr[0]:    angle_joystick = -90.0
-                    elif lr[1]:    angle_joystick = 90.0
-                    state = "TURNING"
+                    if up_dn[0] or up_dn[1]:
+                        angle_joystick = 180.0 if up_dn[0] else 0.0
+                        state = "WALKING"
+                    else:
+                        angle_joystick = 0.0 if lr[0] else 180.0
+                        state = "TURNING"
             else:
                 if state not in ("IDLE", "POWERED_OFF", "REBOLAR", "POSE", "PATINHA"):
                     state = "IDLE"

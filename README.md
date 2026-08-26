@@ -29,7 +29,7 @@ Hardware repo: https://github.com/Penguin-Lab/tiffany
 
 This repository simulates Tiffany, a 6-legged (hexapod) robot, standalone in PyBullet: a self-contained gait engine drives all 18 leg joints directly from keyboard input, with no external middleware. It computes real-time per-leg forward/inverse kinematics and Bezier-curve leg trajectories, and generates a randomized obstacle course to exercise the gait against varied terrain.
 
-<p align="center"><em>Provenance: this repository is where Tiffany's hardware gait algorithms and kinematics were first converted to Python and developed against the 3D model. It served as the basis for <a href="https://github.com/SENAI4LIFE/tiffany_gazebo">SENAI4LIFE/tiffany_gazebo</a>, a later ROS 2 / Gazebo simulation with a full navigation stack, where the gait engine and inverse kinematics were substantially refined. Those refinements — smoothstep-eased swing trajectories, corrected body-tilt kinematics, and improved turning geometry — have since been ported back into this repository.</em></p>
+<p align="center"><em>Provenance: this repository is where Tiffany's hardware gait algorithms and kinematics were first converted to Python and developed against the 3D model. It served as the basis for <a href="https://github.com/SENAI4LIFE/tiffany_gazebo">SENAI4LIFE/tiffany_gazebo</a>, a later ROS 2 / Gazebo simulation with a full navigation stack, where the gait engine and inverse kinematics were substantially refined. Those refinements (smoothstep-eased swing trajectories, corrected body-tilt kinematics, and improved turning geometry) have since been ported back into this repository.</em></p>
 
 ### What the robot can do
 
@@ -112,15 +112,15 @@ This opens the PyBullet GUI with Tiffany standing on a ground plane, followed by
 
 | Key | Action |
 |-----|--------|
-| `E` | Power on — boots the robot and enters idle |
-| `Q` | Power off — runs shutdown sequence |
+| `E` | Power on: boots the robot and enters idle |
+| `Q` | Power off: runs shutdown sequence |
 | `↑ ↓ ← →` | Walk in the corresponding direction |
 | `C` | Switch to **Turn** navigation mode (car-like: forward/backward walks straight, turning arcs each leg's step) |
 | `X` | Switch to **Omni** navigation mode (default: strafes directly toward the pressed direction) |
-| `Z` + `↑ ↓ ← →` | Pose mode — tilt body (pitch / roll) |
-| `R` | Rebolar — body sway animation |
-| `B` | Balance mode — auto-corrects body tilt |
-| `P` | Give a paw — triggers the *patinha* animation |
+| `Z` + `↑ ↓ ← →` | Pose mode: tilt body (pitch / roll) |
+| `R` | Rebolar: body sway animation |
+| `B` | Balance mode: auto-corrects body tilt |
+| `P` | Give a paw: triggers the *patinha* animation |
 | `F` | Toggle camera tracking (follows the robot) |
 
 ---
